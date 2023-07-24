@@ -1,0 +1,52 @@
+import re
+
+var = {}
+
+def check(x):
+    global go
+    if x.count("=") > 1:
+        go = 0
+        print('Invalid assignment')
+    elif x.count("=") == 1:
+        go = 0
+        pattern = r'(\b[a-zA-Z]*)\s*=\s*(\d+|[a-zA-Z]*)([\s\w]*)'
+        match = re.findall(pattern, x)
+        if match[0][0] == '':
+            print('Invalid identifier')
+        elif match[0][1] == '' or match[0][2] != '':
+            print('Invalid assignment')
+        elif '-' in x or '+' in x:
+            print('Invalid assignment')
+            return
+        else:
+            try:
+                var[match[0][0]] = int(match[0][1])
+            except IndexError:
+                 print('Invalid assignment')
+            except ValueError:
+                 try:
+                     var[match[0][0]] = int(var[match[0][1]])
+                 except KeyError:
+                     print('Unknown variable')
+
+
+
+
+while True:
+    a, go = input(), 1
+    if len(a) == 0:
+        pass
+    elif a == '/exit':
+        break
+    elif a[0] == '/' and a != '/exit':
+        print('Unknown command')
+    else:
+        check(a)
+        if go == 1:
+            try:
+                print(eval(''.join(a), var))
+            except NameError:
+                print('Unknown variable')
+            except SyntaxError:
+                print('Invalid expression')
+print('Bye!')
